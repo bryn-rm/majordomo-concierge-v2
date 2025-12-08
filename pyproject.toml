@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "majordomo-concierge-v2"
+version = "0.1.0"
+description = "Majordomo Concierge V2 - multi-agent personal AI assistant"
+requires-python = ">=3.11"
+dependencies = [
+    "google-adk",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
