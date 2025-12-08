@@ -1,0 +1,4 @@
+name: majordomo-concierge
+root_agent: majordomo_agent.agent:root_agent
+model: gemini-2.5-flash
+description: Multi-agent concierge orchestrator.
