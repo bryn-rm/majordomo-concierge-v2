@@ -7,7 +7,7 @@ Production-ready multi-agent concierge built on Google ADK. Majordomo orchestrat
 2. `pip install -r requirements.txt`
 3. Copy `.env.example` to `.env` and add `GOOGLE_API_KEY` and `BRAVE_API_KEY`.
 4. `python scripts/setup/init_databases.py`
-5. `adk web` from the project root (root agent: `majordomo_agent.agent:root_agent`).
+5. `adk web --config config/adk_config.yaml` from the project root (root agent: `majordomo_agent.agent:root_agent`).
 
 ## Features
 - 🧠 **Majordomo orchestration** with seven delegated specialists
@@ -39,7 +39,8 @@ Production-ready multi-agent concierge built on Google ADK. Majordomo orchestrat
 ## Troubleshooting
 - Re-run `python scripts/setup/init_databases.py` if SQLite files are missing.
 - Ensure `npx` is available for MCP tool servers (Brave/Wikipedia).
-- If ADK cannot find the root agent, confirm `majordomo_agent/agent.py` exports `root_agent`.
+- If ADK cannot find the root agent, confirm `majordomo_agent/agent.py` exports `root_agent` and run with `adk web --config config/adk_config.yaml`.
+- For tests: `python -m pytest`
 
 ## License
 MIT License. See `LICENSE`.

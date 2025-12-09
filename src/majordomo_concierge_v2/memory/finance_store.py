@@ -8,12 +8,30 @@ from typing import Dict, List, Optional, Tuple
 from .db_manager import DatabaseManager
 from .. import FINANCE_DB
 
+FINANCE_SCHEMA = """
+CREATE TABLE IF NOT EXISTS expenses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    amount REAL NOT NULL,
+    description TEXT,
+    category TEXT NOT NULL,
+    date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS budgets (
+    category TEXT PRIMARY KEY,
+    monthly_limit REAL NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+"""
+
 
 class FinanceStore:
     """Handles expenses and budgets in SQLite."""
 
     def __init__(self, db_path=FINANCE_DB):
         self.db = DatabaseManager(db_path)
+        self.db.executescript(FINANCE_SCHEMA)
 
     def add_expense(
         self, amount: float, description: str, category: str, when: Optional[date] = None

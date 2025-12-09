@@ -8,12 +8,34 @@ from typing import List, Optional, Tuple
 from .db_manager import DatabaseManager
 from .. import TASK_DB
 
+TASK_SCHEMA = """
+CREATE TABLE IF NOT EXISTS tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT,
+    priority TEXT DEFAULT 'medium',
+    status TEXT DEFAULT 'todo',
+    due_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS habits (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    frequency TEXT DEFAULT 'daily',
+    current_streak INTEGER DEFAULT 0,
+    last_completed DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+"""
+
 
 class TaskStore:
     """Handles todo items and habit tracking."""
 
     def __init__(self, db_path=TASK_DB):
         self.db = DatabaseManager(db_path)
+        self.db.executescript(TASK_SCHEMA)
 
     def add_task(
         self,

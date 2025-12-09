@@ -4,12 +4,17 @@ from google.adk.agents import Agent
 
 from ..agents.base import wrap_functions
 from ..prompts import ARCHIVIST_PROMPT
-from ..tools.local import index_memory, search_memory
+from ..tools.local import (
+    index_memory,
+    search_memory,
+    store_document,
+    search_documents,
+)
 
 
 def create_archivist_agent() -> Agent:
     """Build the document/knowledge agent."""
-    tools = wrap_functions([index_memory, search_memory])
+    tools = wrap_functions([index_memory, search_memory, store_document, search_documents])
     return Agent(
         name="archivist",
         model="gemini-2.0-flash",

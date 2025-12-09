@@ -29,7 +29,9 @@ comptroller_agent = create_comptroller_agent()
 archivist_agent = create_archivist_agent()
 concierge_agent = create_concierge_agent()
 sentinel_agent = create_sentinel_agent()
-taskmaster_agent = create_taskmaster_agent()
+taskmaster_agent = create_taskmaster_agent(
+    delegate_agents=[oracle_agent, scribe_agent, comptroller_agent]
+)
 
 # Root agent (MUST be named root_agent)
 root_agent: Agent = create_majordomo_agent(

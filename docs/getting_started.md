@@ -16,7 +16,7 @@
    ```
 4. **Run the app**
    ```bash
-   adk web
+   adk web --config config/adk_config.yaml
    ```
 5. **Smoke test**
    - “Hello, who are you?” → Majordomo intro

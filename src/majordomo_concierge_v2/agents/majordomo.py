@@ -14,7 +14,10 @@ def create_majordomo_agent(sub_agents: Iterable[Agent]) -> Agent:
     return Agent(
         name="majordomo",
         model="gemini-2.5-flash",
-        description="Root orchestrator that delegates to specialists.",
+        description=(
+            "Root orchestrator that routes by intent, calls specialists in parallel when useful, "
+            "and synthesizes concise answers."
+        ),
         instruction=MAJORDOMO_PROMPT,
         tools=tools,
     )

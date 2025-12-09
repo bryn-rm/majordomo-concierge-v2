@@ -98,3 +98,12 @@ def budget_status(category: str) -> str:
         f"{category}: £{spend:.2f}/£{budget:.2f} used ({pct:.2f}%)."
         f" £{remaining:.2f} left for {days_left} days."
     )
+
+
+def monthly_summary() -> str:
+    """Summarize spend by category for the current month."""
+    breakdown = store.monthly_spend_by_category()
+    if not breakdown:
+        return "No expenses logged yet."
+    lines = [f"- {cat}: £{total:.2f}" for cat, total in breakdown.items()]
+    return "Month-to-date spend:\n" + "\n".join(lines)

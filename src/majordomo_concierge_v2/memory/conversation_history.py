@@ -2,11 +2,20 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Iterable, List, Tuple
 
 from .db_manager import DatabaseManager
 from .. import JOURNAL_DB
+
+CONVERSATION_SCHEMA = """
+CREATE TABLE IF NOT EXISTS conversations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role TEXT NOT NULL,
+    content TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+"""
 
 
 class ConversationHistory:
@@ -14,6 +23,7 @@ class ConversationHistory:
 
     def __init__(self, db_path=JOURNAL_DB):
         self.db = DatabaseManager(db_path)
+        self.db.executescript(CONVERSATION_SCHEMA)
 
     def log(self, role: str, content: str) -> None:
         """Record a conversation turn."""
@@ -22,7 +32,7 @@ class ConversationHistory:
             INSERT INTO conversations (role, content, timestamp)
             VALUES (?, ?, ?)
             """,
-            (role, content, datetime.utcnow().isoformat()),
+            (role, content, datetime.now(timezone.utc).isoformat()),
         )
 
     def recent(self, limit: int = 20) -> List[Tuple[str, str]]:

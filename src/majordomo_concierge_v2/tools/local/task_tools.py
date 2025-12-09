@@ -43,6 +43,18 @@ def upcoming(limit: int = 5) -> str:
     return "\n".join(lines)
 
 
+def list_tasks() -> str:
+    """List all tasks with status."""
+    tasks = store.upcoming(50)
+    if not tasks:
+        return "No tasks found."
+    lines = []
+    for task_id, title, priority, due in tasks:
+        due_str = due or "unscheduled"
+        lines.append(f"- #{task_id} [{priority}] {title} (due {due_str})")
+    return "\n".join(lines)
+
+
 def add_habit(name: str, frequency: str = "daily") -> str:
     """Create a habit."""
     habit_id = store.add_habit(name, frequency)

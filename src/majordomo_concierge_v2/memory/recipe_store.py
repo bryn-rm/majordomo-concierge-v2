@@ -7,12 +7,24 @@ from typing import List, Optional, Tuple
 from .db_manager import DatabaseManager
 from .. import RECIPE_DB
 
+RECIPES_SCHEMA = """
+CREATE TABLE IF NOT EXISTS recipes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    ingredients TEXT NOT NULL,
+    instructions TEXT NOT NULL,
+    tags TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+"""
+
 
 class RecipeStore:
     """Stores recipes and meal plans for the Concierge agent."""
 
     def __init__(self, db_path=RECIPE_DB):
         self.db = DatabaseManager(db_path)
+        self.db.executescript(RECIPES_SCHEMA)
 
     def add_recipe(
         self,
@@ -22,18 +34,6 @@ class RecipeStore:
         tags: Optional[str] = None,
     ) -> int:
         """Insert a recipe row."""
-        cursor = self.db.execute(
-            """
-            CREATE TABLE IF NOT EXISTS recipes (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                ingredients TEXT NOT NULL,
-                instructions TEXT NOT NULL,
-                tags TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-            """
-        )
         cursor = self.db.execute(
             """
             INSERT INTO recipes (title, ingredients, instructions, tags)

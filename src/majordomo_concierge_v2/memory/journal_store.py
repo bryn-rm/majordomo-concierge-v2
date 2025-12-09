@@ -8,12 +8,37 @@ from typing import List, Optional, Tuple
 from .db_manager import DatabaseManager
 from .. import JOURNAL_DB
 
+JOURNAL_SCHEMA = """
+CREATE TABLE IF NOT EXISTS journal_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    content TEXT NOT NULL,
+    entry_type TEXT DEFAULT 'note',
+    tags TEXT,
+    date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS conversations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role TEXT NOT NULL,
+    content TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS preferences (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+"""
+
 
 class JournalStore:
     """CRUD operations for journal entries and preferences."""
 
     def __init__(self, db_path=JOURNAL_DB):
         self.db = DatabaseManager(db_path)
+        self.db.executescript(JOURNAL_SCHEMA)
 
     def add_entry(
         self,

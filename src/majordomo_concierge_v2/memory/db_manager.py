@@ -40,6 +40,12 @@ class DatabaseManager:
             conn.commit()
             return cursor
 
+    def executescript(self, script: str) -> None:
+        """Execute a multi-statement SQL script."""
+        with self.connect() as conn:
+            conn.executescript(script)
+            conn.commit()
+
     def fetch_all(
         self, query: str, params: Iterable | tuple | dict | None = None
     ) -> list[sqlite3.Row]:
