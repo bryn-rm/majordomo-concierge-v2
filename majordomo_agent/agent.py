@@ -3,11 +3,44 @@
 from __future__ import annotations
 
 import os
+import sys
+from pathlib import Path
 
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ImportError:  # Fallback simple loader if python-dotenv is unavailable
+    def load_dotenv(path=None):
+        path = Path(path) if path else Path(".env")
+        if not path.exists():
+            return False
+        for line in path.read_text().splitlines():
+            if not line or line.strip().startswith("#") or "=" not in line:
+                continue
+            key, _, val = line.partition("=")
+            os.environ.setdefault(key.strip(), val.strip())
+        return True
+
 from google.adk.agents import Agent, ParallelAgent  # noqa: F401
 from google.adk.tools import AgentTool
-from google.adk.tools.mcp_tool import MCPToolset, StdioServerParameters  # noqa: F401
+
+# Ensure local src package is importable when running from repo root without installation.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+SRC_PATH = PROJECT_ROOT / "src"
+if str(SRC_PATH) not in sys.path:
+    sys.path.insert(0, str(SRC_PATH))
+
+# Load environment variables from project root or majordomo_agent/.env
+ENV_PATHS = [PROJECT_ROOT / ".env", Path(__file__).parent / ".env"]
+for env_path in ENV_PATHS:
+    if env_path.exists():
+        load_dotenv(env_path, override=True)
+
+missing_keys = [key for key in ("GOOGLE_API_KEY", "BRAVE_API_KEY") if not os.getenv(key)]
+if missing_keys:
+    raise RuntimeError(
+        f"Missing required environment variables: {', '.join(missing_keys)}. "
+        "Populate them in .env at project root or majordomo_agent/.env."
+    )
 
 from majordomo_concierge_v2.agents import (
     create_archivist_agent,
@@ -19,8 +52,6 @@ from majordomo_concierge_v2.agents import (
     create_scribe_agent,
     create_taskmaster_agent,
 )
-
-load_dotenv()
 
 # Instantiate specialist agents
 oracle_agent = create_oracle_agent()

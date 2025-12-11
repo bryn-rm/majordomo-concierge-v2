@@ -15,6 +15,7 @@ from ..tools.local import (
     add_habit,
     complete_habit,
     list_habits,
+    get_weather,
 )
 from ..orchestration.workflow_builder import build_morning_briefing
 
@@ -34,6 +35,7 @@ def create_taskmaster_agent(
             complete_habit,
             list_habits,
             build_morning_briefing,
+            get_weather,
         ]
     )
 

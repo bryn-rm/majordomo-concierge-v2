@@ -6,6 +6,7 @@ from google.adk.agents import Agent
 from google.adk.tools import AgentTool
 
 from ..prompts import MAJORDOMO_PROMPT
+from ..orchestration.router import route_intent
 
 
 def create_majordomo_agent(sub_agents: Iterable[Agent]) -> Agent:
@@ -18,6 +19,8 @@ def create_majordomo_agent(sub_agents: Iterable[Agent]) -> Agent:
             "Root orchestrator that routes by intent, calls specialists in parallel when useful, "
             "and synthesizes concise answers."
         ),
-        instruction=MAJORDOMO_PROMPT,
+        instruction=(
+            f"{MAJORDOMO_PROMPT}\nRouting hint: {route_intent.__doc__ or ''}"
+        ),
         tools=tools,
     )

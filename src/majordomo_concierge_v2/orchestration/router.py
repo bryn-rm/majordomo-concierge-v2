@@ -6,7 +6,7 @@ import re
 
 
 def route_intent(message: str) -> str:
-    """Return the suggested agent name based on a simple heuristic."""
+    """Heuristic routing: research→oracle, memory→scribe, finance→comptroller, docs→archivist, lifestyle→concierge, smart-home→sentinel, tasks→taskmaster."""
     text = message.lower()
     if any(word in text for word in ["spend", "expense", "budget", "bill"]):
         return "comptroller"
